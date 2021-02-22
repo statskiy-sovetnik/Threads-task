@@ -9,7 +9,7 @@
 using namespace std;
 
 class File_Parser {
-    vector<string> words_buff;
+    vector<string> words_buff; //буффер, общий для всех потоков
     int threads_num;
     int key_word_count;
     mutex file_locker, parser_locker;  //parser_locker будет блокировать поток, вызвавший count_key_words до того момента, пока не закончится метод
@@ -76,7 +76,9 @@ public:
         }
 
         //Подсчет вхождений ключевого слова
-        int words_num = words_buff.size(), last_thread_sec_len = words_num % threads, section_len = words_num / threads;
+        int words_num = words_buff.size(),
+            last_thread_sec_len = words_num % threads,
+            section_len = words_num / threads;
         last_thread_sec_len = (last_thread_sec_len == 0 ? section_len : last_thread_sec_len);
         vector<thread> counter_threads(0);
 
